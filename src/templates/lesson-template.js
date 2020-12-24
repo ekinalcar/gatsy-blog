@@ -1,10 +1,28 @@
 import React from "react"
 import { graphql, Link } from "gatsby"
 import { renderRichText } from "gatsby-source-contentful/rich-text"
-import { INLINES } from "@contentful/rich-text-types"
+import { INLINES, MARKS, BLOCKS } from "@contentful/rich-text-types"
+
+const Bold = ({ children }) => <span className="bold">{children}</span>
+const Text = ({ children }) => <p className="align-center">{children}</p>
 
 const options = {
+  renderMark: {
+    [MARKS.BOLD]: text => <Bold>{text}</Bold>,
+  },
   renderNode: {
+    [BLOCKS.PARAGRAPH]: (node, children) => <Text>{children}</Text>,
+    [BLOCKS.EMBEDDED_ASSET]: node => {
+      console.log(node)
+      return (
+        <>
+          <h2>Embedded Asset</h2>
+          <pre>
+            <code>{JSON.stringify(node, null, 2)}</code>
+          </pre>
+        </>
+      )
+    },
     [INLINES.ENTRY_HYPERLINK]: ({
       data: {
         target: { slug, title },
@@ -24,7 +42,6 @@ const LessonTemplate = ({ data: { lesson } }) => (
       </a>
     </p>
     {lesson.body && renderRichText(lesson.body, options)}
-    <img src={lesson.body.references[0].file.url} />
   </div>
 )
 
@@ -37,10 +54,14 @@ export const query = graphql`
       body {
         raw
         references {
-          contentful_id
-          file {
-            fileName
-            url
+          ... on ContentfulAsset {
+            contentful_id
+            fixed(width: 1600) {
+              width
+              height
+              src
+              srcSet
+            }
           }
         }
       }
