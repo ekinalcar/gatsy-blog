@@ -7,6 +7,7 @@ export const query = graphql`
       nodes {
         id
         title
+        slug
         author {
           name
         }
@@ -15,14 +16,14 @@ export const query = graphql`
   }
 `
 
-export default function Home({ data }) {
+export default ({ data }) => {
   return (
     <>
       <h1>Recent Lessons</h1>
       {data.lessons.nodes.map(lesson => (
         <div key={lesson.id}>
           <h2>
-            <Link to={`/${lesson.id}`}>
+            <Link to={`/${lesson.slug}`}>
               {lesson.title} with {lesson.author.name}
             </Link>
           </h2>
