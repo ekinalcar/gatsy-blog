@@ -54,13 +54,20 @@ export const query = graphql`
       body {
         raw
         references {
-          ... on ContentfulAsset {
-            contentful_id
-            fixed(width: 1600) {
-              width
-              height
-              src
-              srcSet
+          ... on Node {
+            ... on ContentfulAsset {
+              contentful_id
+              fixed(width: 1600) {
+                width
+                height
+                src
+                srcSet
+              }
+            }
+            ... on ContentfulLesson {
+              contentful_id
+              title
+              slug
             }
           }
         }
