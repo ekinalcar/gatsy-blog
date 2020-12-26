@@ -13,7 +13,6 @@ const options = {
   renderNode: {
     [BLOCKS.PARAGRAPH]: (node, children) => <Text>{children}</Text>,
     [BLOCKS.EMBEDDED_ASSET]: node => {
-      console.log(node)
       return (
         <>
           <h2>Embedded Asset</h2>
